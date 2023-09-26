@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgcmain-bootstrap-sql
+  namespace: "hello-openshift-02"
+data:
+  bootstrap.sql: |
+    DROP SCHEMA IF EXISTS web CASCADE ;
+    CREATE SCHEMA web AUTHORIZATION redhatuser;
+    
+    DROP SCHEMA IF EXISTS ai CASCADE ;
+    CREATE SCHEMA ai AUTHORIZATION redhatuser;
+    
+    DROP SCHEMA IF EXISTS cqrs CASCADE ;
+    CREATE SCHEMA cqrs AUTHORIZATION redhatuser;
+    
+    create sequence web.GreetingSubmission_SEQ start with 1 increment by 50;
+
+    create table web.GreetingSubmission (
+          id bigint not null,
+          submittedAt timestamp(6) with time zone,
+          author varchar(255),
+          sourceSystem varchar(255) check (sourceSystem in ('REST_API')),
+          text varchar(255),
+          primary key (id)
+      );
