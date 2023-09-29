@@ -5,5 +5,3 @@ resources:
 - ./namespace-02.yaml
 - github.com/redhat-cop/gitops-catalog/amq-streams-operator/operator/overlays/stable?ref=main
 - github.com/redhat-cop/gitops-catalog/crunchy-postgres/operator/overlays/v5?ref=main
-- bootstrap-sql.yaml
-- pgsql-cluster.yaml
