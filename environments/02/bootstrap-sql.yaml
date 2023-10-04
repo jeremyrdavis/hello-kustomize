@@ -2,37 +2,26 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hippo-init-sql
-  namespace: "hello-openshift-02"
+  namespace: "hello-openshift-03"
 data:
   init.sql: |
-    DROP SCHEMA IF EXISTS web CASCADE ;
-    CREATE SCHEMA web AUTHORIZATION hippo;
     
-    DROP SCHEMA IF EXISTS ai CASCADE ;
-    CREATE SCHEMA ai AUTHORIZATION hippo;
-    
-    DROP SCHEMA IF EXISTS cqrs CASCADE ;
-    CREATE SCHEMA cqrs AUTHORIZATION hippo;
-    
-    DROP SCHEMA IF EXISTS greetings CASCADE ;
-    CREATE SCHEMA greetings AUTHORIZATION hippo;
+    \connect hippo;
 
-    create sequence web.GreetingSubmission_SEQ start with 1 increment by 50;
+    create sequence greeting_seq start with 1 increment by 50;
 
-    create table web.GreetingSubmission (
-          id bigint not null,
-          submittedAt timestamp(6) with time zone,
-          author varchar(255),
-          sourceSystem varchar(255) check (sourceSystem in ('REST_API')),
-          text varchar(255),
-          primary key (id)
-      );
-
-      drop sequence if exists Greeting_SEQ;
-      create sequence Greeting_SEQ start with 1 increment by 50;
-      create table Greeting (
+    create table Greeting (
         id bigint not null,
         author varchar(255),
         text varchar(255),
         primary key (id)
     );
+
+
+    GRANT SELECT ON greeting_seq TO hippo;
+    GRANT UPDATE ON greeting_seq TO hippo;
+    GRANT INSERT ON greeting_seq TO hippo;
+
+    GRANT SELECT ON Greeting TO hippo;
+    GRANT INSERT ON Greeting TO hippo;
+    GRANT UPDATE ON Greeting TO hippo;
