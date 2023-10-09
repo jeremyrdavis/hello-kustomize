@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  generation: 1
+  labels:
+    strimzi.io/cluster: greetings-incoming-topic
+  name: greeting-submissions
+  namespace: "hello-openshift-03"
+spec:
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+  partitions: 10
+  replicas: 3
