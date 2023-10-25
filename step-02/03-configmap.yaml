@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hello-openshift-kafka-config
+  namespace: hello-openshift-03
+immutable: false
+data:
+  bootstrap_servers: 'hello-openshift-cluster-kafka-bootstrap:9092'

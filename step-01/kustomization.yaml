@@ -4,5 +4,6 @@ resources:
 - ./namespace-01.yaml
 - ./namespace-02.yaml
 - ./namespace-03.yaml
+- ./namespace-05.yaml
 - github.com/redhat-cop/gitops-catalog/amq-streams-operator/operator/overlays/stable?ref=main
 - github.com/redhat-cop/gitops-catalog/crunchy-postgres/operator/overlays/v5?ref=main

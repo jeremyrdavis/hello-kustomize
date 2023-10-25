@@ -1,0 +1,245 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: example
+  namespace: hello-openshift-05
+  labels:
+    app: httpd
+  annotations:
+    k8s.ovn.org/pod-networks: >-
+      {"default":{"ip_addresses":["10.131.0.18/23"],"mac_address":"0a:58:0a:83:00:12","gateway_ips":["10.131.0.1"],"ip_address":"10.131.0.18/23","gateway_ip":"10.131.0.1"}}
+    k8s.v1.cni.cncf.io/network-status: |-
+      [{
+          "name": "ovn-kubernetes",
+          "interface": "eth0",
+          "ips": [
+              "10.131.0.18"
+          ],
+          "mac": "0a:58:0a:83:00:12",
+          "default": true,
+          "dns": {}
+      }]
+    openshift.io/scc: restricted-v2
+    seccomp.security.alpha.kubernetes.io/pod: runtime/default
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: v1
+      time: '2023-10-11T16:34:19Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+        'f:spec':
+          'f:containers':
+            'k:{"name":"httpd"}':
+              'f:image': {}
+              'f:terminationMessagePolicy': {}
+              .: {}
+              'f:resources': {}
+              'f:securityContext':
+                .: {}
+                'f:allowPrivilegeEscalation': {}
+                'f:capabilities':
+                  .: {}
+                  'f:drop': {}
+              'f:terminationMessagePath': {}
+              'f:imagePullPolicy': {}
+              'f:ports':
+                .: {}
+                'k:{"containerPort":8080,"protocol":"TCP"}':
+                  .: {}
+                  'f:containerPort': {}
+                  'f:protocol': {}
+              'f:name': {}
+          'f:dnsPolicy': {}
+          'f:enableServiceLinks': {}
+          'f:restartPolicy': {}
+          'f:schedulerName': {}
+          'f:securityContext':
+            .: {}
+            'f:runAsNonRoot': {}
+            'f:seccompProfile':
+              .: {}
+              'f:type': {}
+          'f:terminationGracePeriodSeconds': {}
+          'f:volumes':
+            .: {}
+            'k:{"name":"mypd"}':
+              .: {}
+              'f:name': {}
+              'f:persistentVolumeClaim':
+                .: {}
+                'f:claimName': {}
+    - manager: ip-10-0-144-33
+      operation: Update
+      apiVersion: v1
+      time: '2023-10-11T16:34:19Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:k8s.ovn.org/pod-networks': {}
+    - manager: multus
+      operation: Update
+      apiVersion: v1
+      time: '2023-10-11T16:34:19Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:k8s.v1.cni.cncf.io/network-status': {}
+      subresource: status
+    - manager: kubelet
+      operation: Update
+      apiVersion: v1
+      time: '2023-10-11T16:34:20Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:conditions':
+            'k:{"type":"ContainersReady"}':
+              .: {}
+              'f:lastProbeTime': {}
+              'f:lastTransitionTime': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Initialized"}':
+              .: {}
+              'f:lastProbeTime': {}
+              'f:lastTransitionTime': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Ready"}':
+              .: {}
+              'f:lastProbeTime': {}
+              'f:lastTransitionTime': {}
+              'f:status': {}
+              'f:type': {}
+          'f:containerStatuses': {}
+          'f:hostIP': {}
+          'f:phase': {}
+          'f:podIP': {}
+          'f:podIPs':
+            .: {}
+            'k:{"ip":"10.131.0.18"}':
+              .: {}
+              'f:ip': {}
+          'f:startTime': {}
+      subresource: status
+spec:
+  restartPolicy: Always
+  serviceAccountName: default
+  imagePullSecrets:
+    - name: default-dockercfg-dp5h8
+  priority: 0
+  schedulerName: default-scheduler
+  enableServiceLinks: true
+  terminationGracePeriodSeconds: 30
+  preemptionPolicy: PreemptLowerPriority
+  nodeName: ip-10-0-195-20.us-east-2.compute.internal
+  securityContext:
+    seLinuxOptions:
+      level: 's0:c26,c10'
+    runAsNonRoot: true
+    fsGroup: 1000670000
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - resources: {}
+      terminationMessagePath: /dev/termination-log
+      name: httpd
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        runAsUser: 1000670000
+        allowPrivilegeEscalation: false
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: kube-api-access-pgknf
+          readOnly: true
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      terminationMessagePolicy: File
+      image: 'image-registry.openshift-image-registry.svc:5000/openshift/httpd:latest'
+  serviceAccount: default
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: my-storage-claim
+    - name: kube-api-access-pgknf
+      projected:
+        sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              name: kube-root-ca.crt
+              items:
+                - key: ca.crt
+                  path: ca.crt
+          - downwardAPI:
+              items:
+                - path: namespace
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+          - configMap:
+              name: openshift-service-ca.crt
+              items:
+                - key: service-ca.crt
+                  path: service-ca.crt
+        defaultMode: 420
+  dnsPolicy: ClusterFirst
+  tolerations:
+    - key: node.kubernetes.io/not-ready
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 300
+    - key: node.kubernetes.io/unreachable
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 300
+status:
+  phase: Running
+  conditions:
+    - type: Initialized
+      status: 'True'
+      lastProbeTime: null
+      lastTransitionTime: '2023-10-11T16:34:19Z'
+    - type: Ready
+      status: 'True'
+      lastProbeTime: null
+      lastTransitionTime: '2023-10-11T16:34:20Z'
+    - type: ContainersReady
+      status: 'True'
+      lastProbeTime: null
+      lastTransitionTime: '2023-10-11T16:34:20Z'
+    - type: PodScheduled
+      status: 'True'
+      lastProbeTime: null
+      lastTransitionTime: '2023-10-11T16:34:19Z'
+  hostIP: 10.0.195.20
+  podIP: 10.131.0.18
+  podIPs:
+    - ip: 10.131.0.18
+  startTime: '2023-10-11T16:34:19Z'
+  containerStatuses:
+    - restartCount: 0
+      started: true
+      ready: true
+      name: httpd
+      state:
+        running:
+          startedAt: '2023-10-11T16:34:20Z'
+      imageID: >-
+        image-registry.openshift-image-registry.svc:5000/openshift/httpd@sha256:16a24ea0f04b18f980d7279548e1e8d8c30d10948475586fe670b7491a70040b
+      image: 'image-registry.openshift-image-registry.svc:5000/openshift/httpd:latest'
+      lastState: {}
+      containerID: 'cri-o://73432d7b4b112d321b58b967f2b6a52ea06b4187e154009c0f23e623de2e692b'
+  qosClass: BestEffort

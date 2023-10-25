@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ftp-ingress
+  namespace: "hello-openshift-04"
+  labels:
+    app: ftp-app
+spec:
+  rules:
+    - host: ftp-server.apps.cluster-pwf69.pwf69.sandbox1708.opentlc.com  # Change to your desired hostname
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: ftp-service  # Change to the name of your FTP service
+                port:
+                  number: 21  # Change

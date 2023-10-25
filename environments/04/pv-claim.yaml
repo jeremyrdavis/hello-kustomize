@@ -1,0 +1,14 @@
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: task-pv-claim
+  namespace: "hello-openshift-04"
+  labels:
+    app: ftp-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

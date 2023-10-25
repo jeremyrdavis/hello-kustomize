@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: 
+- 02-bootstrap-sql.yaml
+- 02-pgsql-cluster-02.yaml
+- 03-bootstrap-sql.yaml
+- 03-configmap.yaml
+- 03-kafka-cluster.yaml
+- 03-kafka-topic.yaml
+- 03-pgsql-cluster.yaml
+- 04-kafka-cluster.yaml
+- 04-kafka-topic.yaml
+- 04-pv-volume.yaml
+- 04-pv-claim.yaml

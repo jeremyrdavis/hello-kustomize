@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.quarkus.io/commit-id: 25f5ff88f59902c7a4d39abd5b882e89daba821f
+    app.quarkus.io/build-timestamp: 2023-10-09 - 19:40:29 +0000
+  labels:
+    app: ftp-app
+  name: ftp-deployment
+  namespace: "hello-openshift-04"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ftp-deployment
+  template:
+    metadata:
+      labels:
+        app: ftp-deployment
+    spec:
+      containers:
+      - name: ftp-server
+        image: fauria/vsftpd
+        ports:
+        - containerPort: 21
+        env:
+        - name: FTP_USER
+          value: "user"
+        - name: FTP_PASS
+          value: "pass1234"
+      securityContext:
+          runAsUser: 0
